@@ -1,12 +1,12 @@
 # from pyramid import testing
-# import os
-# import io
+import os
+import io
 # from pyramid.response import Response
 # import pytest
 
 from pyramid import testing
 from pyramid.httpexceptions import HTTPNotFound
-from pyramid_learning_journal.view.defaul import JOURNAL_ENTRIES
+from pyramid_learning_journal.views.default import JOURNAL_ENTRIES
 import pytest
 
 HERE = os.path.dirname(__file__)
