@@ -1,0 +1,10 @@
+
+{% extends "layout.jinja2" %}
+{% block content %}
+<h1>List of Expenses</h1>
+<ul>
+    {% for entry in entry %}
+    <li>Expense {{ entry.id }}: {{ entry.title }} ${{ entry.date }} <a href="{{ request.route_url('detail', id=item.id) }}"><button>View only this entry</button></a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

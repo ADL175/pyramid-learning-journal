@@ -1,6 +1,12 @@
-from pyramid import testing
+# from pyramid import testing
 import os
-from pyramid.response import Response
+import io
+# from pyramid.response import Response
+# import pytest
+
+from pyramid import testing
+from pyramid.httpexceptions import HTTPNotFound
+from pyramid_learning_journal.views.default import JOURNAL_ENTRIES
 import pytest
 
 HERE = os.path.dirname(__file__)
@@ -10,6 +16,7 @@ HERE = os.path.dirname(__file__)
 def httprequest():
     req = testing.DummyRequest()
     return req
+
 
 def test_return_of_views_are_responses():
     """Test if the return of views are responses."""
@@ -28,7 +35,7 @@ def test_return_of_views_are_responses():
 def test_html_content_in_response(httprequest):
     """Test the html content."""
     from pyramid_learning_journal.views.default import list_view
-    file_content = open(os.path.join(HERE, 'templates/index.html')).read()
+    file_content = io.open(os.path.join(HERE, 'templates/index.html')).read()
     response = list_view(httprequest)
     assert file_content == response.text
 
@@ -38,3 +45,36 @@ def check_if_ok_status_with_request(httprequest):
     from pyramid_learning_journal.views.default import list_view
     response = list_view(httprequest)
     assert response.status_code == 200
+
+
+    # ==========================FUNCTIONAL TESTS===========================
+
+
+    @pytest.fixture
+    def testapp():
+        """Create a test application to use for functional tests."""
+        from pyramid_learning_journal import main
+        from webtest import TestApp
+        app = main({})
+        return TestApp(app)
+
+
+    def test_home_route_returns_home_content(testapp):
+        """."""
+        response - testapp.get('/')
+        html = response.html
+        assert 'List of Entries' in str(html.find('h1').text)
+        assert 'Journal Tracker | Home' in str(html.find('title').text)
+
+
+def test_home_route_listing_has_all_entries(testapp):
+    """."""
+    response = testapp.get('/')
+    html = response.html
+    assert len(JOURNAL_ENTRIES) == len(html.find_all('li'))
+
+
+def test_detail_raoute_with_bad_id(testapp):
+    """."""
+    response = testapp.get('/entry/400', status=404)
+    assert 'Alchemy Scaffold' in response.text
