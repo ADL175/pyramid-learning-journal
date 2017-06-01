@@ -36,14 +36,14 @@ def httprequest():
 #     from pyramid_learning_journal.views.default import list_view
 #     file_content = io.open(os.path.join(HERE, 'templates/index.html')).read()
 #     response = list_view(httprequest)
-#     assert file_content == response.text
+#     assert file_content == response.textd
 
 
-def check_if_ok_status_with_request(httprequest):
-    """Check if 200 status on request."""
-    from pyramid_learning_journal.views.default import list_view
-    response = list_view(httprequest)
-    assert response.status_code == 200
+# def check_if_ok_status_with_request(httprequest):
+#     """Check if 200 status on request."""
+#     from pyramid_learning_journal.views.default import list_view
+#     response = list_view(httprequest)
+#     assert response.status_code == 200
 
 # =================== FUNCTIONAL TESTS =============
 
