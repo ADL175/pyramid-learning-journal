@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>David's Journal | {{ page }}</title>
-        <!-- <link rel="stylesheet" type="text/css" href="{{ request.static_path('pyramid_learning_journal:static/style.css') }}" /> -->
+        <title>David's Journal| {{ page }}</title>
+        <link rel="stylesheet" type="text/css" href="{{ request.static_path('pyramid_learning_journal:static/clean-blog.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ request.static_path('pyramid_learning_journal:static/clean-blog.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ request.static_path('pyramid_learning_journal:static/style.css') }}" />
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     </head>
+
+
+
+
+        <!-- Page Header -->
+        <!-- Set your background image for this header on the line below. -->
+        <header class="intro-header" style="background-image: url('/static/vendor/img/contact-bg.jpg')">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                        <div class="page-heading">
+                              <h1>David Lim's Journal of Learning</h1>
+                            <hr class="small">
+                            <span class="subheading">Create a new post</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
     <body>
-    <a href="{{ request.route_url('home') }}"><button>Home</button></a>
+
+    <a href="{{ request.route_url('home') }}"><button>Click to go Home</button></a>
     {% block content %}{% endblock %}
     </body>
+
 </html>
