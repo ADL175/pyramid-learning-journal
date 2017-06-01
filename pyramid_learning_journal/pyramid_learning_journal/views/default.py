@@ -25,9 +25,16 @@ def home_view(request):
 def detail_view(request):
     """View for the journal route."""
     the_id = int(request.matchdict['id'])
-    try:
-        journal = JOURNALS[the_id]
-    except IndexError:
+
+    journal = None
+    for item in JOURNALS:
+        if item['id'] == the_id:
+            journal = item
+            break
+
+    # journal = list(filter(lambda item: item['id'] == the_id, JOURNALS))
+
+    if not journal:
         raise HTTPNotFound
 
     return {
