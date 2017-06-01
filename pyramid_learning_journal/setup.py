@@ -3,8 +3,8 @@ import os
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-# with open(os.path.join(here, 'README.txt')) as f:
-#     README = f.read()
+with open(os.path.join(here, 'README.txt')) as f:
+    README = f.read()
 with open(os.path.join(here, 'CHANGES.txt')) as f:
     CHANGES = f.read()
 
@@ -19,6 +19,7 @@ requires = [
     'transaction',
     'zope.sqlalchemy',
     'waitress',
+    'psycopg2'
 ]
 
 tests_require = [
@@ -32,7 +33,7 @@ setup(
     name='pyramid_learning_journal',
     version='0.0',
     description='Learning Journal',
-    # long_description=README + '\n\n' + CHANGES,
+    long_description=README + '\n\n' + CHANGES,
     classifiers=[
         'Programming Language :: Python',
         'Framework :: Pyramid',
@@ -55,7 +56,7 @@ setup(
             'main = pyramid_learning_journal:main',
         ],
         'console_scripts': [
-            'initialize_pyramid_learning_journal_db = pyramid_learning_journal.scripts.initializedb:main',
+            'initializedb = pyramid_learning_journal.scripts.initializedb:main',
         ],
     },
 )
