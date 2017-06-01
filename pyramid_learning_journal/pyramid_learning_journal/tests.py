@@ -6,8 +6,9 @@ import io
 
 from pyramid import testing
 from pyramid.httpexceptions import HTTPNotFound
-from pyramid_learning_journal.views.default import JOURNAL_ENTRIES
+from pyramid_learning_journal.views.default import JOURNALS
 import pytest
+
 
 HERE = os.path.dirname(__file__)
 
@@ -46,35 +47,34 @@ def check_if_ok_status_with_request(httprequest):
     response = list_view(httprequest)
     assert response.status_code == 200
 
-
-    # ==========================FUNCTIONAL TESTS===========================
-
-
-    @pytest.fixture
-    def testapp():
-        """Create a test application to use for functional tests."""
-        from pyramid_learning_journal import main
-        from webtest import TestApp
-        app = main({})
-        return TestApp(app)
+# =================== FUNCTIONAL TESTS =============
 
 
-    def test_home_route_returns_home_content(testapp):
-        """."""
-        response - testapp.get('/')
-        html = response.html
-        assert 'List of Entries' in str(html.find('h1').text)
-        assert 'Journal Tracker | Home' in str(html.find('title').text)
+@pytest.fixture
+def testapp():
+    """Create a test application to use for functional tests."""
+    from pyramid_learning_journal import main
+    from webtest import TestApp
+    app = main({})
+    return TestApp(app)
 
 
-def test_home_route_listing_has_all_entries(testapp):
-    """."""
+def test_home_route_returns_home_content(testapp):
+    """Test the thome route returns home content."""
     response = testapp.get('/')
     html = response.html
-    assert len(JOURNAL_ENTRIES) == len(html.find_all('li'))
+    assert 'List of Journals' in str(html.find('h1').text)
+    assert 'Journal Tracker | Home' in str(html.find('title').text)
 
 
-def test_detail_raoute_with_bad_id(testapp):
-    """."""
-    response = testapp.get('/entry/400', status=404)
-    assert 'Alchemy Scaffold' in response.text
+def test_home_route_listing_has_all_journals(testapp):
+    """Test the home route listing has all journals."""
+    response = testapp.get('/')
+    html = response.html
+    assert len(JOURNALS) == len(html.find_all('li'))
+
+
+def test_detail_route_with_bad_id(testapp):
+    """Test the detail route with a bad ID."""
+    response = testapp.get('/journal/400', status=404)
+    assert "Alchemy scaffold" in response.text

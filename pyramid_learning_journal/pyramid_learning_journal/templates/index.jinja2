@@ -1,10 +1,10 @@
 
 {% extends "layout.jinja2" %}
 {% block content %}
-<h1>List of Expenses</h1>
+<h1>David Lim's List of Journals</h1>
 <ul>
-    {% for entry in entry %}
-    <li>Expense {{ entry.id }}: {{ entry.title }} ${{ entry.date }} <a href="{{ request.route_url('detail', id=item.id) }}"><button>View only this entry</button></a></li>
+    {% for item in journals %}
+    <li>Journal #{{ item.id }}: <strong>{{ item.title }}</strong> from <em>{{ item.date }}</em> <a href="{{ request.route_url('detail', id=item.id) }}"><button>See This Journal</button></a></li>
     {% endfor %}
 </ul>
 {% endblock %}
