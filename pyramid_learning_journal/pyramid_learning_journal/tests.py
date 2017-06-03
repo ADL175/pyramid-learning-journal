@@ -50,12 +50,34 @@ def test_home_route_returns_home_content(testapp):
     assert 'Journal' in str(html.find('title').text)
 
 
-def test_detail_route_returns_proper_content(testapp):
-    """Test the detail route returns proper journal entry."""
-    response = testapp.get('/journal/1')
+def test_home_route_has_h1(testapp):
+    """The home page has a table in the html."""
+    response = testapp.get('/', status=200)
     html = response.html
-    import pdb; pdb.set_trace()
-    # assert response ==
+    assert len(html.find_all("h1")) == 2
+
+
+# def test_detail_view_returns_dict(testapp):
+#     """Home view returns a dictionary of values."""
+#     from pyramid_learning_journal.views.default import detail_view
+#     response = detail_view(testapp)
+#     assert isinstance(response, dict)
+
+
+# def test_detail_view_returns_count_matching_database(testapp):
+#     """Home view response matches database count."""
+#     from pyramid_learning_journal.views.default import detail_view
+#     response = detail_view(testapp)
+#     query = testapp.dbsession.query(Journal)
+#     assert len(response['journal']) == query.count()
+
+
+# def test_detail_route_returns_proper_content(testapp):
+#     """Test the detail route returns proper journal entry."""
+#     response = testapp.get('/journal/1')
+#     html = response.html
+#     import pdb; pdb.set_trace()
+#     assert
 
 
     # config.add_route('detail', '/journal/{id:\d+}')
