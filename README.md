@@ -1,5 +1,8 @@
 # pyramid-learning-journal
 
+<h1>Step 4</h1>
+
+
 <h1>Step 2</h1>
 
 Step 2 w/ Carlos partnered on the journal server project. Implemented journal entries and incorporated templating to streamline user experience and refactor unnecessary code.

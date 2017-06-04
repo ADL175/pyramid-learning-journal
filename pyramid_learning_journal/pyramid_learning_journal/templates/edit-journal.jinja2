@@ -1,0 +1,23 @@
+{% extends "layout.jinja2" %}
+{% block content %}
+    <h1>EDIT YOUR JOURNAL</h1>
+    <form method="POST">
+      <ul>
+        <li>
+          <label for="title">Title: </label>
+        </br>
+          <input type="text" name="title" value="{{ title }}"/>
+        </li>
+        <li>
+          <label for="body">Edit Journal</label>
+        </br>
+          <textarea name="body" rows="8" cols="80">
+            {{ body }}
+          </textarea>
+        </li>
+        <li>
+            <input type="submit" value="Submit Update" />
+        </li>
+      </ul>
+    </form>
+{% endblock %}

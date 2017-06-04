@@ -1,5 +1,12 @@
 {% extends "layout.jinja2" %}
 {% block content %}
     <h1>{{ journal.title }} from {{ journal.date }} </h1>
+    <a href="
+{{ request.route_url('update', id=journal.id) }}
+    ">
+      <button>
+        Edit Journal
+      </button>
+    </a>
     <p>{{ journal.body }}</p>
 {% endblock %}
