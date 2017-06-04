@@ -1,10 +1,10 @@
 import pytest
-from pyramid import testing
 import transaction
-from pyramid.httpexceptions import HTTPNotFound
+from pyramid import testing
+from pyramid_learning_journal.models import Journal, get_tm_session
+from pyramid_learning_journal.models.meta import Base
 import os
 import io
-from pyramid_learning_journal.models.meta import Base
 
 # =================== FUNCTIONAL TESTS =============
 
@@ -57,27 +57,67 @@ def test_home_route_has_h1(testapp):
     assert len(html.find_all("h1")) == 2
 
 
-# def test_detail_view_returns_dict(testapp):
-#     """Home view returns a dictionary of values."""
-#     from pyramid_learning_journal.views.default import detail_view
-#     response = detail_view(testapp)
-#     assert isinstance(response, dict)
+@pytest.fixture
+def new_session(testapp):
+    """Return a session for inspecting the database."""
+    SessionFactory = testapp.app.registry["dbsession_factory"]
+    with transaction.manager:
+        dbsession = get_tm_session(SessionFactory, transaction.manager)
+    return dbsession
 
 
-# def test_detail_view_returns_count_matching_database(testapp):
-#     """Home view response matches database count."""
-#     from pyramid_learning_journal.views.default import detail_view
-#     response = detail_view(testapp)
-#     query = testapp.dbsession.query(Journal)
-#     assert len(response['journal']) == query.count()
+def test_home_route_is_found(testapp):
+    """The home page has a good route."""
+    response = testapp.get('/', status=200)
+    assert response.status_code == 200
 
 
-# def test_detail_route_returns_proper_content(testapp):
-#     """Test the detail route returns proper journal entry."""
-#     response = testapp.get('/journal/1')
-#     html = response.html
-#     import pdb; pdb.set_trace()
-#     assert
+def test_detail_route_is_found(testapp):
+    """The detail page has a good route."""
+    response = testapp.get('/journal/1', status=200)
+    assert response.status_code == 200
 
 
-    # config.add_route('detail', '/journal/{id:\d+}')
+def test_detail_route_is_not_found(testapp):
+    """The detail page has a bad route."""
+    response = testapp.get('/journal/1123', status=404)
+    assert response.status_code == 404
+
+
+def test_create_route_is_found(testapp):
+    """The create page has a table in the html."""
+    response = testapp.get('/journal/new-journal', status=200)
+    assert response.status_code == 200
+
+
+def test_edit_route_is_found(testapp):
+    """The edit page is a good route."""
+    response = testapp.get('/journal/1/edit', status=200)
+    assert response.status_code == 200
+
+
+def test_edit_route_is_not_found(testapp):
+    """The edit page is a bad route."""
+    response = testapp.get('/journal/asdf/edit', status=404)
+    assert response.status_code == 404
+
+
+def test_user_can_create_new_post(testapp):
+    """User can post new post."""
+    response = testapp.get("/new-journal", params={
+        "title": "Test Title for Pytest",
+        "body" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+    })
+    response = testapp.get('/')
+    assert "Test Title for Pytest" in response.text
+
+
+def test_user_can_edit_post(testapp):
+    """User can post edit post."""
+    response = testapp.get("/journal/4/edit")
+    testapp.post('/journal/4/edit', params={
+        "title": "Edited title for Pytest",
+        "body" : "Lorem ipsum dolor sit amet."
+    })
+    response = testapp.get('/journal/4')
+    assert "Edited title for Pytest" in response.text
