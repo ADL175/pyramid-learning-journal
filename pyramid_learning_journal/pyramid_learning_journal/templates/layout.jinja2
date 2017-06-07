@@ -46,6 +46,21 @@
     </button>
   </a>
 
+  <a href="
+  {{ request.route_url('login') }}
+  ">
+    <button>
+      Log In
+    </button>
+  </a>
+
+  <a href="
+  {{ request.route_url('logout') }}
+  ">
+    <button>
+      Log Out
+    </button>
+  </a>
 
     {% block content %}{% endblock %}
 
