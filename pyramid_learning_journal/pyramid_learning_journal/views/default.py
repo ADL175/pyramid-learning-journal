@@ -88,7 +88,7 @@ def update_view(request):
     )
 def login(request):
     """View for user login."""
-    import pdb; pdb.set_trace()
+
     if request.method == 'GET':
         return {}
     if request.method == 'POST':
