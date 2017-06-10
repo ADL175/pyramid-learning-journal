@@ -1,0 +1,17 @@
+<form  action="http://whispering-crag-44203.herokuapp.com/journal/new-journal" method="POST">
+  <div class="row" id="detail-entry">
+    <div class="form-group">
+      <label class="input-header" for="title">Title</label>
+      <input type="text" id="input-title" name="title" value="{{ title }}" required/>
+    </div>
+    <div class="form-group">
+      <label class="input-header" for="text">Entry</label>
+      <textarea name="text" id="input-text" rows="8" cols="80" required>{{ text }}</textarea>
+    </div>
+    <div class="form-group">
+      <input type="submit" class="btn btn-default" name="" value="Add a new entry" />
+
+    </div>
+  </div>
+
+</form>
