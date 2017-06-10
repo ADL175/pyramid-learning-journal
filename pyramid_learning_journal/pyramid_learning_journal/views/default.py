@@ -1,7 +1,11 @@
 
 from pyramid.view import view_config
-from pyramid.httpexceptions import (HTTPNotFound, HTTPFound)
+from pyramid.httpexceptions import (
+    HTTPNotFound,
+    HTTPFound
+    )
 from pyramid.security import remember, forget
+from pyramid.session import check_csrf_token
 from pyramid_learning_journal.models import Journal
 from pyramid_learning_journal.security import check_credentials
 import datetime
@@ -40,6 +44,7 @@ def detail_view(request):
 def create_view(request):
     """Authenticates user to view to create a new journal entry."""
     if request.method == "POST" and request.POST:
+        # check_csrf_token(request)
         if not request.POST['title'] or not request.POST['body']:
             return {
                 'title': request.POST['title'],
@@ -76,6 +81,7 @@ def update_view(request):
             'body': journal.body
         }
     if request.method == 'POST':
+        # check_csrf_token(request)
         journal.title = request.POST['title']
         journal.body = request.POST['body']
         request.dbsession.flush()
@@ -85,6 +91,7 @@ def update_view(request):
 @view_config(
     route_name='login',
     renderer='../templates/login.jinja2',
+    require_csrf=False
     )
 def login(request):
     """View for user login."""
