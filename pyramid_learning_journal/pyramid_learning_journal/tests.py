@@ -2,6 +2,10 @@ import pytest
 import transaction
 from pyramid import testing
 from pyramid_learning_journal.models.meta import Base
+from pyramid_learning_journal.models import (
+    Journal,
+    get_tm_session
+)
 import os
 
 SITE_ROOT = 'http://localhost'
@@ -137,8 +141,8 @@ def test_get_login_returns_dict(dummy_request):
 #     post_request.POST = data
 #     response = login(post_request)
 #     assert isinstance(response, HTTPFound)
-#
-#
+
+
 def test_logout_redirects(dummy_request):
     from pyramid_learning_journal.views.default import logout
     from pyramid.httpexceptions import HTTPFound
@@ -146,23 +150,23 @@ def test_logout_redirects(dummy_request):
     assert isinstance(response, HTTPFound)
 
 
-#=============INTEGRATION TESTS AFTER THIS POINT==============
+# =============INTEGRATION TESTS AFTER THIS POINT==============
 
 @pytest.fixture
 def testapp(request):
     """Create a test application to use for functional tests."""
-    from pyramid_learning_journal import main
     from webtest import TestApp
     from pyramid.config import Configurator
 
     def main(global_config, **settings):
         """ This function returns a Pyramid WSGI application.
         """
-        settings['sqlalchemy.url'] = os.environ.get('DATABASE_URL_TEST')
+        settings['sqlalchemy.url'] = "postgres:///psycotest_test"
         config = Configurator(settings=settings)
         config.include('pyramid_jinja2')
-        config.include('.models')
-        config.include('.routes')
+        config.include('pyramid_learning_journal.models')
+        config.include('pyramid_learning_journal.routes')
+        config.include('pyramid_learning_journal.security')
         config.scan()
         return config.make_wsgi_app()
 
@@ -205,6 +209,81 @@ def new_session(testapp):
     return dbsession
 
 
+def test_unauthenticated_user_forbidden_from_create(testapp):
+    """unauthenticated user can't create entry."""
+    response = testapp.get('/journal/new-journal', status=403)
+    assert response.status_code == 403
+
+def test_unauthenicated_forbidden_from_update_route(testapp):
+    """unauthenticated user can't edit entry."""
+    response = testapp.get('/journal/1/edit', status=403)
+    assert response.status_code == 403
+
+
+def test_login_can_be_viewed(testapp):
+    """any user can see login."""
+    response = testapp.get('/login', status=200)
+    assert response.status_code == 200
+
+
+def test_get_login_route_has_form_and_fields(testapp):
+    """any user can see login form fields."""
+    response = testapp.get('/login')
+    html = response.html
+    assert html.find('form').attrs['method'] == 'POST'
+    assert html.find('input', type='submit').attrs['value'] == 'Log In'
+    assert html.find('input', {'name': 'username'})
+    assert html.find('input', {'name': 'password'})
+
+
+def test_post_login_route_with_bad_creds(testapp):
+    """bad user can see login form fields."""
+    response = testapp.post('/login', {
+        'username': 'blah',
+        'password': 'blahas'
+    })
+    assert response.status_code == 200
+    html = response.html
+    assert html.find('form').attrs['method'] == 'POST'
+    assert html.find('input', type='submit').attrs['value'] == 'Log In'
+    assert html.find('input', {'name': 'username'})
+    assert html.find('input', {'name': 'password'})
+
+
+def test_post_login_route_with_good_creds(testapp):
+    """good user can login."""
+    response = testapp.post('/login', {
+        'username': 'armydavidlim',
+        'password': 'poop'
+    })
+    assert 'auth_tkt' in response.headers['Set-Cookie']
+    assert response.status_code == 302
+    assert response.location == SITE_ROOT + '/'
+
+# WIP
+# def test_new_expense_no_token_fails(testapp):
+#     """When redirection is followed, result is home page."""
+#     data = {
+#         'title': 'blah',
+#         'body': 'blah'
+#     }
+#     response = testapp.post('/journal/new-journal', data, status=400)
+#     assert response.status_code == 400
+
+# WIP
+# def test_new_expense_redirects_to_home(testapp):
+#     """When redirection is followed, result is home page."""
+#     response1 = testapp.get('/journal/new-journal')
+#     token = response1.html.find('input', type='hidden').attrs['value']
+#     data = {
+#         'title': 'plop',
+#         'body': 'blah',
+#         'csrf_token': token
+#     }
+#     response = testapp.post('/journal/new-journal', data)
+#     assert response.location == SITE_ROOT + "/"
+
+
 def test_home_route_is_found(testapp):
     """The home page has a good route."""
     response = testapp.get('/', status=200)
@@ -215,8 +294,8 @@ def test_home_route_is_found(testapp):
 #     """The detail page has a good route."""
 #     response = testapp.get('/journal/1', status=200)
 #     assert response.status_code == 200
-#
-#
+
+
 def test_detail_route_is_not_found(testapp):
     """The detail page has a bad route."""
     response = testapp.get('/journal/1123', status=404)
