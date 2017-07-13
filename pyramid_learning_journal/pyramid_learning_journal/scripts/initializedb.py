@@ -17,7 +17,7 @@ from ..models import (
     )
 
 from pyramid_learning_journal.data.journal import JOURNALS
-from ..models import Journal
+from .models import Journal
 from datetime import datetime
 
 
@@ -53,5 +53,4 @@ def main(argv=sys.argv):
                 date=datetime.now()
             )
             many_entries.append(new_entry)
-        # import pdb; pdb.set_trace()
         dbsession.add_all(many_entries)

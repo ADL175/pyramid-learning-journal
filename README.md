@@ -1,6 +1,8 @@
 # pyramid-learning-journal
 
-<h1>Step 4</h1>
+<h1>Step 3</h1>
+
+Implemented SQLalchemy and templating on home and detail/post page. Created environmental variables to deploy to Heroku. 
 
 
 <h1>Step 2</h1>
