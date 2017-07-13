@@ -17,7 +17,7 @@ from ..models import (
     )
 
 from pyramid_learning_journal.data.journal import JOURNALS
-from ..models import Journal
+from .models import Journal
 from datetime import datetime
 
 
