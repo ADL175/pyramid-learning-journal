@@ -21,7 +21,7 @@
                         <div class="page-heading">
                               <h1>David Lim's Journal of Learning</h1>
                             <hr class="small">
-                            <span class="subheading">Create a new post</span>
+                            <span class="subheading">DREAM JOURNAL!</span>
                         </div>
                     </div>
                 </div>
@@ -30,8 +30,40 @@
 
     <body>
 
-    <a href="{{ request.route_url('home') }}"><button>Click to go Home</button></a>
+    <a href="
+    {{ request.route_url('home') }}
+    ">
+      <button>
+        Home
+      </button>
+    </a>
+
+  <a href="
+  {{ request.route_url('create') }}
+  ">
+    <button>
+      New Entry
+    </button>
+  </a>
+
+  <a href="
+  {{ request.route_url('login') }}
+  ">
+    <button>
+      Log In
+    </button>
+  </a>
+
+  <a href="
+  {{ request.route_url('logout') }}
+  ">
+    <button>
+      Log Out
+    </button>
+  </a>
+
     {% block content %}{% endblock %}
+
     </body>
 
 </html>

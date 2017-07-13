@@ -4,6 +4,7 @@
 
 Implemented SQLalchemy and templating on home and detail/post page. Created environmental variables to deploy to Heroku. 
 
+
 <h1>Step 2</h1>
 
 Step 2 w/ Carlos partnered on the journal server project. Implemented journal entries and incorporated templating to streamline user experience and refactor unnecessary code.
