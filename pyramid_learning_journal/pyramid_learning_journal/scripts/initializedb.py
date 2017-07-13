@@ -53,5 +53,4 @@ def main(argv=sys.argv):
                 date=datetime.now()
             )
             many_entries.append(new_entry)
-        # import pdb; pdb.set_trace()
         dbsession.add_all(many_entries)
